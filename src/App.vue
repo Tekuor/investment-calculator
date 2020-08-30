@@ -194,7 +194,7 @@ export default {
         this.show = !this.show
       },
       calculate(){
-        if(this.calcOption === 'prrincipal'){
+        if(this.calcOption === 'principal'){
           let results = [0]
           let interest = [0]
           for(let i = 1; i <= this.period; i++){
