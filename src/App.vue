@@ -1,28 +1,382 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="topnav">
+      <a>Brand name</a>
+    </div>
+    <div id="main1">
+      <div class="header__bg"></div>
+      <h1>Investment Calculator</h1>
+      <p>Want to know how much my principal can grow after a duration</p>
+      <el-row style="position:relative; height:100%; width:70%;padding-top:20px;margin: auto;">
+        <el-col :lg="12" :xs="24" :sm="24" :md="24" style="height:100%"> 
+          <div style="background-color:#FCFCFC; width:100%; height:100%; padding-top: 1px;">
+            <div :class="{ active: calcOption == 'principal',inactive: calcOption != 'principal' }" id="option1">
+              <el-row style="padding-top:15px;padding-left:10px">
+                <el-col :span="2">
+                  <input type="radio" id="option" name="option" value="principal" v-model="calcOption">
+                </el-col>
+                <el-col :span="20">
+                  <label for="option">I want to know how much my principal can grow after a duration.</label>
+                </el-col>
+              </el-row>
+            </div>
+
+            <div :class="{ active: calcOption == 'target',inactive: calcOption != 'target' }" id="option2">
+              <el-row style="padding-top:15px;padding-left:10px">
+                <el-col :span="2">
+                  <input type="radio" id="optionC" name="option" value="target" v-model="calcOption">
+                </el-col>
+                <el-col :span="20">
+                  <label for="optionC">I want to know how much to invest to get a target amount after a duration.</label>
+                </el-col>
+              </el-row>
+            </div>
+
+            <div id="principal" v-if="calcOption === 'principal'">
+              <label for="principal" style="color:#3A3A3AB3">Principal (Amount to invest)</label><br/>
+              <input type="number" min="1" step="any" id="principalValue" v-model="principal">
+            </div>
+
+            <div id="principal" v-if="calcOption === 'target'">
+              <label for="principal" style="color:#3A3A3AB3">Target Amount</label><br/>
+              <input type="number" min="1" step="any" id="principalValue" v-model="futureValue">
+            </div>
+
+            <div id="principal">
+              <label for="principal" style="color:#3A3A3AB3">Period</label><br/>
+              <input type="number" min="1" step="any" id="principalValue" v-model="period">
+            </div>
+
+            <div id="years">
+              <el-row>
+                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 1,inactiveYear: period != 1 }" id="yearOption">
+                  <div v-on:click="changePeriod(1)">1 year</div>
+                </el-col>
+                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 2,inactiveYear: period != 2 }" id="yearOption">
+                  <div v-on:click="changePeriod(2)">2 years</div>
+                </el-col>
+                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 3,inactiveYear: period != 3 }" id="yearOption">
+                  <div v-on:click="changePeriod(3)">3 years</div>
+                </el-col>
+                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 4,inactiveYear: period != 4 }" id="yearOption">
+                  <div v-on:click="changePeriod(4)">4 years</div>
+                </el-col>
+                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 5,inactiveYear: period != 5 }" id="yearOption">
+                  <div v-on:click="changePeriod(5)">5 years</div>
+                </el-col>
+              </el-row>
+            </div>
+
+            <div id="principal">
+              <label for="principal" style="color:#3A3A3AB3">Interest</label><br/>
+              <input type="number" min="1" step="any" id="principalValue" v-model="interest">
+            </div>
+
+            <div id="calcBtn" style="padding-bottom:20px">
+              <button type="button" v-on:click="calculate()">Calculate</button>
+            </div>
+          </div>
+        </el-col>
+        <el-col :lg="12" :xs="24" :sm="24" :md="24" style="height:554px"> 
+          <div style="background-color:#FFFFFF; width:100%; height:100%" v-if="!show">
+            <img src="./assets/invest.png" width="100%" style="padding-top:20%" /> 
+          </div>
+          <transition name="slide-fade">
+            <div class="small" style="background-color:#FFFFFF; width:100%; height:100%" v-if="show">
+              <div style="color:#3F845C;text-align: center;font-weight: bold;padding-top:40px;padding-bottom:20px">GHC {{result}}</div>
+              <div style="width:400px; height:400px;margin:auto">
+                <line-chart :chart-data="datacollection" :options="options"></line-chart>
+              </div>
+            </div>
+          </transition>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LineChart from './LineChart.js'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    LineChart
+  },
+  data () {
+      return {
+        datacollection: {
+          labels: [0],
+          datasets: [
+            {
+              label: 'Balance',
+              backgroundColor: "rgba(255, 224, 181, 0.4)",
+              data: [],
+              fill: true,
+              lineTension: 0.1,
+              borderCapStyle: 'square',
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderWidth: 1,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 2,
+              pointRadius: 4,
+              pointHitRadius: 10
+            },
+            {
+              label: 'Interest',
+              backgroundColor: "rgba(63, 132, 92, 0.4)",
+              data: [],
+              fill: true,
+              lineTension: 0.1,
+              borderCapStyle: 'square',
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderWidth: 1,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 2,
+              pointRadius: 4,
+              pointHitRadius: 10
+            }
+          ]
+        },
+        options: {
+          legend:{
+            position: 'top'
+          },
+          scales: {
+            xAxes: [{
+                gridLines: {
+                  display:false
+                }
+            }],
+            yAxes: [{
+                gridLines: {
+                  display:false
+                },
+                ticks: {
+                    display: false
+                } 
+            }]
+          }
+        },
+        show: false,
+        principal: "",
+        period: '',
+        interest: "",
+        futureValue: "",
+        result: "",
+        calcOption: "principal",
+        totalInterest: ""
+      }
+    },
+  mounted () {
+      // this.fillData()
+    },
+  methods: {
+      fillData () {
+        this.datacollection = {
+          labels: ['January', 'February'],
+          datasets: [
+            {
+              label: 'Total Interest',
+              backgroundColor: '#FFEFDA',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }, {
+              label: 'Total contributions',
+              backgroundColor: '#3F845C80',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }
+          ]
+        }
+      },
+      showChart(){
+        this.show = !this.show
+      },
+      calculate(){
+        if(this.calcOption === 'prrincipal'){
+          let results = [0]
+          let interest = [0]
+          for(let i = 1; i <= this.period; i++){
+            const result = this.principal*Math.pow((1+(this.interest/100)),i)
+            results.push(result.toFixed(2))
+            this.datacollection.labels.push(`Year ${i}`)
+            this.result = result.toFixed(2)
+            let totalInterest = (this.result - this.principal).toFixed(2)
+            interest.push(totalInterest)
+            this.totalInterest = totalInterest
+          }
+          this.datacollection.datasets[0].data = results
+          this.datacollection.datasets[1].data = interest
+          this.show = true
+        }else {
+          const result = this.futureValue/Math.pow((1+(this.interest/100)),this.period)
+          console.log("result",result.toFixed(2))
+        }
+      },
+      changePeriod(num){
+        this.period = num
+      }
   }
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  height: 100%
+}
+
+.active {
+  background-color:#1593EF1A; 
+  color:#107ECE
+}
+
+.inactive {
+  background-color:#F4F4F440; 
+  color:#3A3A3AB3; 
+  border: 1px solid #3A3A3A1A;
+}
+
+.inactiveYear {
+  border: 1px solid #70707080; 
+  color:#3A3A3AB3;
+}
+
+#main1 {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.header__bg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-image: linear-gradient(#3F845C, #3F845C);
+  transform: skewY(-7deg);
+  transform-origin: top left;
+  padding: 0 0 0 0
+}
+
+/* Add a black background color to the top navigation */
+.topnav {
+  background-color: white;
+  overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: black;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  padding: 14px 16px;
+  padding-left: 8%;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+div h1, p {
+  position: relative;
+  color: #FFE0B5;
+  padding-left: 15%;
+}
+
+div p {
+  font-size: 13px;
+}
+
+#check {
+  position: relative;
+  height: 70%;
+  width: 100%;
+  background-color: white;
+  /* margin-left: 40%; */
+  margin-top: 3%;
+  overflow: auto;
+}
+
+#option1 {
+  position: relative;
+  height: 65px;
+  width: 70%;
+  margin: auto;
+  margin-top: 5%;
+  font-size: 15px;
+}
+
+#option2 {
+  position: relative;
+  height: 65px;
+  width: 70%;
+  /* background-color: #3A3A3A1A; */
+  margin: auto;
+  margin-top: 5%;
+  font-size: 15px;
+}
+
+#principal {
+  position: relative;
+  width: 70%;
+  margin: auto;
+  margin-top: 5%;
+  font-size: 15px;
+}
+
+#principalValue {
+  width: 100%;
+  height: 35px;
+  background-color: #B9B9B91A;
+  border: 0;
+}
+
+#calcBtn {
+  position: relative;
+  width: 70%;
+  margin: auto;
+  margin-top: 5%;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  height: 40px;
+  background-color: #FFE0B5;
+  border: 0;
+  font-weight: bold;
+}
+
+#years {
+  position: relative;
+  /* height: 65px; */
+  width: 70%;
+  margin: auto;
+  margin-top: 2%;
+  font-size: 15px;
+}
+
+#yearOption {
+  font-size:15px; 
+  height:25px;
+  text-align: center;
+  padding-top:3px;
+  margin-right: 10px;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all .10s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>
