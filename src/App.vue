@@ -10,7 +10,7 @@
       <el-row style="position:relative; height:100%; width:70%;padding-top:20px;margin: auto;">
         <el-col :lg="12" :xs="24" :sm="24" :md="24" style="height:100%"> 
           <div style="background-color:#FCFCFC; width:100%; height:100%; padding-top: 1px;">
-            <div :class="{ active: calcOption == 'principal',inactive: calcOption != 'principal' }" id="option1">
+            <div :class="{ active: calcOption == 'principal',inactive: calcOption != 'principal' }" style="cursor:pointer;border-radius:6px" id="option1" @click="changeOption('principal')">
               <el-row style="padding-top:15px;padding-left:10px">
                 <el-col :span="2">
                   <input type="radio" id="option" name="option" value="principal" v-model="calcOption">
@@ -21,7 +21,7 @@
               </el-row>
             </div>
 
-            <div :class="{ active: calcOption == 'target',inactive: calcOption != 'target' }" id="option2">
+            <div :class="{ active: calcOption == 'target',inactive: calcOption != 'target' }" id="option2" style="cursor:pointer;border-radius:6px" @click="changeOption('target')">
               <el-row style="padding-top:15px;padding-left:10px">
                 <el-col :span="2">
                   <input type="radio" id="optionC" name="option" value="target" v-model="calcOption">
@@ -78,7 +78,7 @@
           </div>
         </el-col>
         <el-col :lg="12" :xs="24" :sm="24" :md="24" style="height:554px"> 
-          <div style="background-color:#FFFFFF; width:100%; height:100%" v-if="!show">
+          <div style="background-color:#FFFFFF; width:100%; height:100%" v-if="!show && !show2">
             <img src="./assets/invest.png" width="100%" style="padding-top:20%" /> 
           </div>
           <transition name="slide-fade">
@@ -87,6 +87,12 @@
               <div style="width:400px; height:400px;margin:auto">
                 <line-chart :chart-data="datacollection" :options="options"></line-chart>
               </div>
+            </div>
+          </transition>
+
+          <transition name="slide-fade">
+            <div class="small" style="background-color:#FFFFFF; width:100%; height:100%" v-if="show2">
+                You will need to invest <span style="text-align: center;color:#3F845C;font-weight: bold">GHC {{result}}</span> to make {{futureValue}} after {{period}} years at a rate of {{interest}}
             </div>
           </transition>
         </el-col>
@@ -167,7 +173,8 @@ export default {
         futureValue: "",
         result: "",
         calcOption: "principal",
-        totalInterest: ""
+        totalInterest: "",
+        show2: false
       }
     },
   mounted () {
@@ -211,11 +218,16 @@ export default {
           this.show = true
         }else {
           const result = this.futureValue/Math.pow((1+(this.interest/100)),this.period)
+          this.result = result.toFixed(2)
+          this.show2 = true
           console.log("result",result.toFixed(2))
         }
       },
       changePeriod(num){
         this.period = num
+      },
+      changeOption(value){
+        this.calcOption = value
       }
   }
 }
