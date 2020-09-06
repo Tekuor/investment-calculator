@@ -10,7 +10,7 @@
         <p>Want to know how much my principal can grow after a duration</p>
         <div class="grid-container" style="position:relative; height:100%; width:70%;padding-top:20px;margin: auto;">
           <div style="height:100%"> 
-            <div style="background-color:#FCFCFC; width:100%; height:100%; padding-top: 1px;">
+            <div style="background-color:#FFFFFF; width:100%; height:100%; padding-top: 1px;">
               <div :class="{ active: calcOption == 'principal',inactive: calcOption != 'principal' }" style="cursor:pointer;border-radius:6px" id="option1" @click="changeOption('principal')">
                 <el-row style="padding-top:15px;padding-left:10px">
                   <el-col :span="2">
@@ -50,7 +50,7 @@
                 <input type="number" min="1" step="any" id="periodValue" v-model="period">
                 </div>
                 <div style="padding-left: 3px;">
-                  <select name="period" id="period">
+                  <select name="period" id="period" v-model="time">
                     <option value="months">Months</option>
                     <option value="years">Years</option>
                   </select>
@@ -90,7 +90,7 @@
               </div>
             </div>
           </div>
-          <div  style="height:554px"> 
+          <div  style="height:100%"> 
             <div style="background-color:#FFFFFF; width:100%; height:100%" v-if="!show && !show2">
               <img src="./assets/invest.png" width="100%" style="padding-top:20%" /> 
             </div>
@@ -116,12 +116,12 @@
 </template>
 
 <script>
-// import LineChart from './LineChart.js'
+import LineChart from './LineChart.js'
 
 export default {
   name: 'App',
   components: {
-    // LineChart
+    LineChart
   },
   data () {
       return {
@@ -188,7 +188,8 @@ export default {
         result: "",
         calcOption: "principal",
         totalInterest: "",
-        show2: false
+        show2: false,
+        time: "years"
       }
     },
   mounted () {
@@ -438,6 +439,7 @@ select{
   height: 37px;
   border-style: solid;
   border-width: 1px;
+  border: solid #3A3A3A1A;
   text-indent: 10px;
   background-color: #B9B9B91A;
   margin-right: 5px;
