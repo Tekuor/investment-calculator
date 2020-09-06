@@ -5,109 +5,123 @@
     </div>
     <div id="main1">
       <div class="header__bg"></div>
-      <h1>Investment Calculator</h1>
-      <p>Want to know how much my principal can grow after a duration</p>
-      <el-row style="position:relative; height:100%; width:70%;padding-top:20px;margin: auto;">
-        <el-col :lg="12" :xs="24" :sm="24" :md="24" style="height:100%"> 
-          <div style="background-color:#FCFCFC; width:100%; height:100%; padding-top: 1px;">
-            <div :class="{ active: calcOption == 'principal',inactive: calcOption != 'principal' }" style="cursor:pointer;border-radius:6px" id="option1" @click="changeOption('principal')">
-              <el-row style="padding-top:15px;padding-left:10px">
-                <el-col :span="2">
-                  <input type="radio" id="option" name="option" value="principal" v-model="calcOption">
-                </el-col>
-                <el-col :span="20">
-                  <label for="option">I want to know how much my principal can grow after a duration.</label>
-                </el-col>
-              </el-row>
-            </div>
+      <div>
+        <h1>Investment Calculator</h1>
+        <p>Want to know how much my principal can grow after a duration</p>
+        <div class="grid-container" style="position:relative; height:100%; width:70%;padding-top:20px;margin: auto;">
+          <div style="height:100%"> 
+            <div style="background-color:#FCFCFC; width:100%; height:100%; padding-top: 1px;">
+              <div :class="{ active: calcOption == 'principal',inactive: calcOption != 'principal' }" style="cursor:pointer;border-radius:6px" id="option1" @click="changeOption('principal')">
+                <el-row style="padding-top:15px;padding-left:10px">
+                  <el-col :span="2">
+                    <input type="radio" id="option" name="option" value="principal" v-model="calcOption">
+                  </el-col>
+                  <el-col :span="20">
+                    <label for="option">I want to know how much my principal can grow after a duration.</label>
+                  </el-col>
+                </el-row>
+              </div>
 
-            <div :class="{ active: calcOption == 'target',inactive: calcOption != 'target' }" id="option2" style="cursor:pointer;border-radius:6px" @click="changeOption('target')">
-              <el-row style="padding-top:15px;padding-left:10px">
-                <el-col :span="2">
-                  <input type="radio" id="optionC" name="option" value="target" v-model="calcOption">
-                </el-col>
-                <el-col :span="20">
-                  <label for="optionC">I want to know how much to invest to get a target amount after a duration.</label>
-                </el-col>
-              </el-row>
-            </div>
+              <div :class="{ active: calcOption == 'target',inactive: calcOption != 'target' }" id="option2" style="cursor:pointer;border-radius:6px" @click="changeOption('target')">
+                <el-row style="padding-top:15px;padding-left:10px">
+                  <el-col :span="2">
+                    <input type="radio" id="optionC" name="option" value="target" v-model="calcOption">
+                  </el-col>
+                  <el-col :span="20">
+                    <label for="optionC">I want to know how much to invest to get a target amount after a duration.</label>
+                  </el-col>
+                </el-row>
+              </div>
 
-            <div id="principal" v-if="calcOption === 'principal'">
-              <label for="principal" style="color:#3A3A3AB3">Principal (Amount to invest)</label><br/>
-              <input type="number" min="1" step="any" id="principalValue" v-model="principal">
-            </div>
+              <div id="principal" v-if="calcOption === 'principal'">
+                <label for="principal" style="color:#3A3A3AB3">Principal (Amount to invest)</label><br/>
+                <input type="number" min="1" step="any" id="principalValue" v-model="principal">
+              </div>
 
-            <div id="principal" v-if="calcOption === 'target'">
-              <label for="principal" style="color:#3A3A3AB3">Target Amount</label><br/>
-              <input type="number" min="1" step="any" id="principalValue" v-model="futureValue">
-            </div>
+              <div id="principal" v-if="calcOption === 'target'">
+                <label for="principal" style="color:#3A3A3AB3">Target Amount</label><br/>
+                <input type="number" min="1" step="any" id="principalValue" v-model="futureValue">
+              </div>
+              
+              <div id="principal">
+              <label for="principal" style="color:#3A3A3AB3">Period</label>
+              <div class="period">
+                <div>
+                <input type="number" min="1" step="any" id="periodValue" v-model="period">
+                </div>
+                <div style="padding-left: 3px;">
+                  <select name="period" id="period">
+                    <option value="months">Months</option>
+                    <option value="years">Years</option>
+                  </select>
+                </div>
+              </div>
+              </div>
 
-            <div id="principal">
-              <label for="principal" style="color:#3A3A3AB3">Period</label><br/>
-              <input type="number" min="1" step="any" id="principalValue" v-model="period">
-            </div>
+              <div id="years">
+                <el-row>
+                  <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 1,inactiveYear: period != 1 }" id="yearOption">
+                    <div v-on:click="changePeriod(1)">1 year</div>
+                  </el-col>
+                  <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 2,inactiveYear: period != 2 }" id="yearOption">
+                    <div v-on:click="changePeriod(2)">2 years</div>
+                  </el-col>
+                  <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 3,inactiveYear: period != 3 }" id="yearOption">
+                    <div v-on:click="changePeriod(3)">3 years</div>
+                  </el-col>
+                  <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 4,inactiveYear: period != 4 }" id="yearOption">
+                    <div v-on:click="changePeriod(4)">4 years</div>
+                  </el-col>
+                  <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 5,inactiveYear: period != 5 }" id="yearOption">
+                    <div v-on:click="changePeriod(5)">5 years</div>
+                  </el-col>
+                </el-row>
+              </div>
 
-            <div id="years">
-              <el-row>
-                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 1,inactiveYear: period != 1 }" id="yearOption">
-                  <div v-on:click="changePeriod(1)">1 year</div>
-                </el-col>
-                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 2,inactiveYear: period != 2 }" id="yearOption">
-                  <div v-on:click="changePeriod(2)">2 years</div>
-                </el-col>
-                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 3,inactiveYear: period != 3 }" id="yearOption">
-                  <div v-on:click="changePeriod(3)">3 years</div>
-                </el-col>
-                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 4,inactiveYear: period != 4 }" id="yearOption">
-                  <div v-on:click="changePeriod(4)">4 years</div>
-                </el-col>
-                <el-col :lg="4" style="cursor:pointer" :class="{ active: period == 5,inactiveYear: period != 5 }" id="yearOption">
-                  <div v-on:click="changePeriod(5)">5 years</div>
-                </el-col>
-              </el-row>
-            </div>
+              <div id="principal">
+                <label for="principal" style="color:#3A3A3AB3">Interest</label><br/>
+                <div class="percent">
+                <input type="number" min="1" step="any" id="principalValue" v-model="interest">
+                </div>
+              </div>
 
-            <div id="principal">
-              <label for="principal" style="color:#3A3A3AB3">Interest</label><br/>
-              <input type="number" min="1" step="any" id="principalValue" v-model="interest">
-            </div>
-
-            <div id="calcBtn" style="padding-bottom:20px">
-              <button type="button" v-on:click="calculate()">Calculate</button>
-            </div>
-          </div>
-        </el-col>
-        <el-col :lg="12" :xs="24" :sm="24" :md="24" style="height:554px"> 
-          <div style="background-color:#FFFFFF; width:100%; height:100%" v-if="!show && !show2">
-            <img src="./assets/invest.png" width="100%" style="padding-top:20%" /> 
-          </div>
-          <transition name="slide-fade">
-            <div class="small" style="background-color:#FFFFFF; width:100%; height:100%" v-if="show">
-              <div style="color:#3F845C;text-align: center;font-weight: bold;padding-top:40px;padding-bottom:20px">GHC {{result}}</div>
-              <div style="width:400px; height:400px;margin:auto">
-                <line-chart :chart-data="datacollection" :options="options"></line-chart>
+              <div id="calcBtn" style="padding-bottom:20px">
+                <button type="button" v-on:click="calculate()">Calculate</button>
               </div>
             </div>
-          </transition>
-
-          <transition name="slide-fade">
-            <div class="small" style="background-color:#FFFFFF; width:100%; height:100%" v-if="show2">
-                You will need to invest <span style="text-align: center;color:#3F845C;font-weight: bold">GHC {{result}}</span> to make {{futureValue}} after {{period}} years at a rate of {{interest}}
+          </div>
+          <div  style="height:554px"> 
+            <div style="background-color:#FFFFFF; width:100%; height:100%" v-if="!show && !show2">
+              <img src="./assets/invest.png" width="100%" style="padding-top:20%" /> 
             </div>
-          </transition>
-        </el-col>
-      </el-row>
+            <transition name="slide-fade">
+              <div class="small" style="background-color:#FFFFFF; width:100%; height:100%" v-if="show">
+                <div style="color:#3F845C;text-align: center;font-weight: bold;padding-top:40px;padding-bottom:20px">GHC {{result}}</div>
+                <div style="width:400px; height:400px;margin:auto">
+                  <line-chart :chart-data="datacollection" :options="options"></line-chart>
+                </div>
+              </div>
+            </transition>
+
+            <transition name="slide-fade">
+              <div class="small" style="background-color:#FFFFFF; width:100%; height:100%" v-if="show2">
+                  You will need to invest <span style="text-align: center;color:#3F845C;font-weight: bold">GHC {{result}}</span> to make {{futureValue}} after {{period}} years at a rate of {{interest}}
+              </div>
+            </transition>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import LineChart from './LineChart.js'
+// import LineChart from './LineChart.js'
 
 export default {
   name: 'App',
   components: {
-    LineChart
+    // LineChart
   },
   data () {
       return {
@@ -271,7 +285,13 @@ export default {
   background-image: linear-gradient(#3F845C, #3F845C);
   transform: skewY(-7deg);
   transform-origin: top left;
-  padding: 0 0 0 0
+  padding: 0 0 0 0;
+  z-index: -100;
+}
+
+.content{;
+    position: relative;
+    z-index: 100;
 }
 
 /* Add a black background color to the top navigation */
@@ -345,6 +365,14 @@ div p {
   border: 0;
 }
 
+#periodValue {
+  width: 100%;
+  height: 35px;
+  background-color: #B9B9B91A;
+  border: 0;
+  border-radius: 6px 0px 0px 6px;
+}
+
 #calcBtn {
   position: relative;
   width: 70%;
@@ -376,6 +404,7 @@ button {
   text-align: center;
   padding-top:3px;
   margin-right: 10px;
+  border-radius: 6px;
 }
 
 /* Enter and leave animations can use different */
@@ -390,5 +419,57 @@ button {
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(10px);
   opacity: 0;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  padding: 10px;
+}
+input {
+  text-indent:15px;
+  border-radius: 6px;
+}
+.period {
+  display: grid;
+  grid-template-columns: 75% 25%;
+}
+select{
+  width: 100%;
+  height: 37px;
+  border-style: solid;
+  border-width: 1px;
+  text-indent: 10px;
+  background-color: #B9B9B91A;
+  margin-right: 5px;
+  border-radius: 0px 6px 6px 0px;
+}
+
+#option1:hover, #option2:hover {
+  background-color:#1593EF1A; 
+  color:#107ECE
+}
+
+#yearOption:hover {
+  background-color:#1593EF1A; 
+  color:#107ECE
+}
+
+.percent {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+
+.percent::after {
+  position: absolute;
+  top: 10px;
+  right: .5em;
+  transition: all .05s ease-in-out;
+  content: '%';
+}
+
+.percent:hover::after,
+.percent:focus-within::after {
+  right: 1.5em;
 }
 </style>
