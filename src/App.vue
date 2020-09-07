@@ -406,6 +406,7 @@ button {
   text-align: center;
   margin-right: 10px;
   border-radius: 6px;
+  padding-top: 3px;
 }
 
 /* Enter and leave animations can use different */
