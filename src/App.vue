@@ -8,11 +8,11 @@
       <div>
         <h1>Investment Calculator</h1>
         <p>Want to know how much my principal can grow after a duration</p>
-        <div class="grid-container" style="position:relative; height:100%; width:70%;padding-top:20px;margin: auto;">
+        <div class="grid-container" style="position:relative; height:100%; width:70%;padding-top:10px;margin: auto;">
           <div style="height:100%"> 
             <div style="background-color:#FFFFFF; width:100%; height:100%; padding-top: 1px;">
               <div :class="{ active: calcOption == 'principal',inactive: calcOption != 'principal' }" style="cursor:pointer;border-radius:6px" id="option1" @click="changeOption('principal')">
-                <el-row style="padding-top:15px;padding-left:10px">
+                <el-row style="padding-top:10px;padding-left:10px">
                   <el-col :span="2">
                     <input type="radio" id="option" name="option" value="principal" v-model="calcOption">
                   </el-col>
@@ -23,7 +23,7 @@
               </div>
 
               <div :class="{ active: calcOption == 'target',inactive: calcOption != 'target' }" id="option2" style="cursor:pointer;border-radius:6px" @click="changeOption('target')">
-                <el-row style="padding-top:15px;padding-left:10px">
+                <el-row style="padding-top:10px;padding-left:10px">
                   <el-col :span="2">
                     <input type="radio" id="optionC" name="option" value="target" v-model="calcOption">
                   </el-col>
@@ -95,7 +95,7 @@
               <img src="./assets/invest.png" width="100%" style="padding-top:20%" /> 
             </div>
             <transition name="slide-fade">
-              <div class="small" style="background-color:#FFFFFF; width:100%; height:100%" v-if="show">
+              <div style="background-color:#FFFFFF; width:100%; height:100%" v-if="show">
                 <div style="color:#3F845C;text-align: center;font-weight: bold;padding-top:40px;padding-bottom:20px">GHC {{result}}</div>
                 <div style="width:400px; height:400px;margin:auto">
                   <line-chart :chart-data="datacollection" :options="options"></line-chart>
@@ -401,9 +401,9 @@ button {
 
 #yearOption {
   font-size:15px; 
-  height:25px;
+  height:30px;
+  width: 64px;
   text-align: center;
-  padding-top:3px;
   margin-right: 10px;
   border-radius: 6px;
 }
@@ -423,7 +423,7 @@ button {
 }
 .grid-container {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 50% 50%;
   padding: 10px;
 }
 input {
@@ -464,7 +464,7 @@ select{
 
 .percent::after {
   position: absolute;
-  top: 10px;
+  top: 7px;
   right: .5em;
   transition: all .05s ease-in-out;
   content: '%';
