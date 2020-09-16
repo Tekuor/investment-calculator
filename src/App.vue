@@ -230,10 +230,12 @@ export default {
           }
           this.datacollection.datasets[0].data = results
           this.datacollection.datasets[1].data = interest
+          this.show2 = false
           this.show = true
         }else {
           const result = this.futureValue/Math.pow((1+(this.interest/100)),this.period)
           this.result = result.toFixed(2)
+          this.show = false
           this.show2 = true
           console.log("result",result.toFixed(2))
         }
