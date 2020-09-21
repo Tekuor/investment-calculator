@@ -5,13 +5,21 @@ export default {
   extends: Line,
   mixins: [reactiveProp],
   props: {
-    chartdata: {
+    chartData: {
       type: Object,
       default: null
     },
     options: {
       type: Object,
       default: null
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.renderChart(val, this.options)
+      }
     }
   },
   mounted () {

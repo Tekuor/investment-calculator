@@ -86,7 +86,7 @@
               </div>
 
               <div id="calcBtn" style="padding-bottom:20px">
-                <button type="button" v-on:click="calculate()">Calculate</button>
+                <button type="button" v-on:click="calculate()" :disabled="disableCalculate">Calculate</button>
               </div>
             </div>
           </div>
@@ -178,7 +178,8 @@ export default {
                     display: false
                 } 
             }]
-          }
+          },
+          responsive: true
         },
         show: false,
         principal: "",
@@ -191,9 +192,6 @@ export default {
         show2: false,
         time: "years"
       }
-    },
-  mounted () {
-      // this.fillData()
     },
   methods: {
       fillData () {
@@ -216,6 +214,9 @@ export default {
         this.show = !this.show
       },
       calculate(){
+        this.datacollection.labels = [0]
+        this.datacollection.datasets[0].data = []
+        this.datacollection.datasets[1].data = []
         if(this.calcOption === 'principal'){
           let results = [0]
           let interest = [0]
@@ -245,7 +246,22 @@ export default {
       },
       changeOption(value){
         this.calcOption = value
+        this.principal = ""
+        this.period = ""
+        this.interest = ""
+        this.futureValue = ""
       }
+  },
+  computed:{
+    disableCalculate(){
+      if(this.calcOption === 'principal' && (!this.period || !this.principal || !this.interest)){
+        return true
+      }
+      if(this.calcOption === 'target' && (!this.futureValue || !this.principal || !this.interest)){
+        return true
+      }
+      return false
+    }
   }
 }
 </script>
@@ -384,12 +400,31 @@ div p {
   font-size: 15px;
 }
 
+button:active,
+button:focus {
+  outline-color: #fcd39a 
+}
+
+button:hover {
+  cursor:pointer
+}
+
+button:disabled {
+  opacity: 0.6;
+  color: grey;
+  pointer-events: none;
+}
+
+input:focus {
+  outline-color: #b9b9b9 
+}
+
 button {
   width: 100%;
   height: 40px;
   background-color: #FFE0B5;
   border: 0;
-  font-weight: bold;
+  font-weight: 
 }
 
 #years {
