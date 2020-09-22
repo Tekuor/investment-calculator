@@ -234,11 +234,22 @@ export default {
           this.show2 = false
           this.show = true
         }else {
-          const result = this.futureValue/Math.pow((1+(this.interest/100)),this.period)
-          this.result = result.toFixed(2)
-          this.show = false
-          this.show2 = true
-          console.log("result",result.toFixed(2))
+          const res = this.futureValue/Math.pow((1+(this.interest/100)),this.period)
+          this.result = res.toFixed(2)
+          let results = [0]
+          let interest = [0]
+          for(let i = 1; i <= this.period; i++){
+            const result = res*Math.pow((1+(this.interest/100)),i)
+            results.push(result.toFixed(2))
+            this.datacollection.labels.push(`Year ${i}`)
+            let totalInterest = (this.result - this.principal).toFixed(2)
+            interest.push(totalInterest)
+            this.totalInterest = totalInterest
+          }
+          this.datacollection.datasets[0].data = results
+          this.datacollection.datasets[1].data = interest
+          this.show2 = false
+          this.show = true
         }
       },
       changePeriod(num){
@@ -257,7 +268,7 @@ export default {
       if(this.calcOption === 'principal' && (!this.period || !this.principal || !this.interest)){
         return true
       }
-      if(this.calcOption === 'target' && (!this.futureValue || !this.principal || !this.interest)){
+      if(this.calcOption === 'target' && (!this.futureValue || !this.period || !this.interest)){
         return true
       }
       return false
