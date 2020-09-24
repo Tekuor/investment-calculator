@@ -15,12 +15,12 @@ export default {
     }
   },
   watch: {
-    chartData: {
-      deep: true,
-      handler(val) {
-        this.renderChart(val, this.options)
-      }
-    }
+    // chartData: {
+    //   deep: true,
+    //   handler(val) {
+    //     this.renderChart(val, this.options)
+    //   }
+    // }
   },
   mounted () {
     // this.chartData is created in the mixin.

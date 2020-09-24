@@ -125,41 +125,7 @@ export default {
   },
   data () {
       return {
-        datacollection: {
-          labels: [0],
-          datasets: [
-            {
-              label: 'Balance',
-              backgroundColor: "rgba(255, 224, 181, 0.4)",
-              data: [],
-              fill: true,
-              lineTension: 0.1,
-              borderCapStyle: 'square',
-              borderDashOffset: 0.0,
-              borderJoinStyle: 'miter',
-              pointBorderWidth: 1,
-              pointHoverRadius: 8,
-              pointHoverBorderWidth: 2,
-              pointRadius: 4,
-              pointHitRadius: 10
-            },
-            {
-              label: 'Interest',
-              backgroundColor: "rgba(63, 132, 92, 0.4)",
-              data: [],
-              fill: true,
-              lineTension: 0.1,
-              borderCapStyle: 'square',
-              borderDashOffset: 0.0,
-              borderJoinStyle: 'miter',
-              pointBorderWidth: 1,
-              pointHoverRadius: 8,
-              pointHoverBorderWidth: 2,
-              pointRadius: 4,
-              pointHitRadius: 10
-            }
-          ]
-        },
+        datacollection: null,
         options: {
           legend:{
             position: 'top'
@@ -193,6 +159,14 @@ export default {
         time: "years"
       }
     },
+    watch: {
+    datacollection: {
+      deep: true,
+      handler(val) {
+        console.log("check",val)
+      }
+    }
+  },
   methods: {
       fillData () {
         this.datacollection = {
@@ -214,23 +188,55 @@ export default {
         this.show = !this.show
       },
       calculate(){
-        this.datacollection.labels = [0]
-        this.datacollection.datasets[0].data = []
-        this.datacollection.datasets[1].data = []
         if(this.calcOption === 'principal'){
           let results = [0]
           let interest = [0]
+          let labels = [0]
           for(let i = 1; i <= this.period; i++){
             const result = this.principal*Math.pow((1+(this.interest/100)),i)
             results.push(result.toFixed(2))
-            this.datacollection.labels.push(`Year ${i}`)
+            labels.push(`Year ${i}`)
             this.result = result.toFixed(2)
             let totalInterest = (this.result - this.principal).toFixed(2)
             interest.push(totalInterest)
             this.totalInterest = totalInterest
           }
-          this.datacollection.datasets[0].data = results
-          this.datacollection.datasets[1].data = interest
+
+          this.datacollection = {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Balance',
+              backgroundColor: "rgba(255, 224, 181, 0.4)",
+              data: results,
+              fill: true,
+              lineTension: 0.1,
+              borderCapStyle: 'square',
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderWidth: 1,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 2,
+              pointRadius: 4,
+              pointHitRadius: 10
+            },
+            {
+              label: 'Interest',
+              backgroundColor: "rgba(63, 132, 92, 0.4)",
+              data: interest,
+              fill: true,
+              lineTension: 0.1,
+              borderCapStyle: 'square',
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderWidth: 1,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 2,
+              pointRadius: 4,
+              pointHitRadius: 10
+            }
+          ]
+        }
           this.show2 = false
           this.show = true
         }else {
@@ -238,16 +244,51 @@ export default {
           this.result = res.toFixed(2)
           let results = [0]
           let interest = [0]
+          let labels = [0]
           for(let i = 1; i <= this.period; i++){
             const result = res*Math.pow((1+(this.interest/100)),i)
             results.push(result.toFixed(2))
-            this.datacollection.labels.push(`Year ${i}`)
+            labels.push(`Year ${i}`)
             let totalInterest = (this.result - this.principal).toFixed(2)
             interest.push(totalInterest)
             this.totalInterest = totalInterest
           }
-          this.datacollection.datasets[0].data = results
-          this.datacollection.datasets[1].data = interest
+
+          this.datacollection = {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Balance',
+              backgroundColor: "rgba(255, 224, 181, 0.4)",
+              data: results,
+              fill: true,
+              lineTension: 0.1,
+              borderCapStyle: 'square',
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderWidth: 1,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 2,
+              pointRadius: 4,
+              pointHitRadius: 10
+            },
+            {
+              label: 'Interest',
+              backgroundColor: "rgba(63, 132, 92, 0.4)",
+              data: interest,
+              fill: true,
+              lineTension: 0.1,
+              borderCapStyle: 'square',
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderWidth: 1,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 2,
+              pointRadius: 4,
+              pointHitRadius: 10
+            }
+          ]
+        }
           this.show2 = false
           this.show = true
         }
