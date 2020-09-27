@@ -45,17 +45,9 @@
               
               <div id="principal">
               <label for="principal" style="color:#3A3A3AB3">Period</label>
-              <div class="period">
                 <div>
                 <input type="number" min="1" step="any" id="periodValue" v-model="period">
                 </div>
-                <div style="padding-left: 3px;">
-                  <select name="period" id="period" v-model="time">
-                    <option value="months">Months</option>
-                    <option value="years">Years</option>
-                  </select>
-                </div>
-              </div>
               </div>
 
               <div id="years">
@@ -190,7 +182,7 @@ export default {
       calculate(){
         if(this.calcOption === 'principal'){
           let results = [0]
-          let interest = [0]
+          let contributions = [0]
           let labels = [0]
           for(let i = 1; i <= this.period; i++){
             const result = this.principal*Math.pow((1+(this.interest/100)),i)
@@ -198,7 +190,7 @@ export default {
             labels.push(`Year ${i}`)
             this.result = result.toFixed(2)
             let totalInterest = (this.result - this.principal).toFixed(2)
-            interest.push(totalInterest)
+            contributions.push(this.principal)
             this.totalInterest = totalInterest
           }
 
@@ -206,7 +198,7 @@ export default {
           labels: labels,
           datasets: [
             {
-              label: 'Balance',
+              label: 'Future Value',
               backgroundColor: "rgba(255, 224, 181, 0.4)",
               data: results,
               fill: true,
@@ -221,9 +213,9 @@ export default {
               pointHitRadius: 10
             },
             {
-              label: 'Interest',
+              label: 'Contributions',
               backgroundColor: "rgba(63, 132, 92, 0.4)",
-              data: interest,
+              data: contributions,
               fill: true,
               lineTension: 0.1,
               borderCapStyle: 'square',
@@ -243,22 +235,21 @@ export default {
           const res = this.futureValue/Math.pow((1+(this.interest/100)),this.period)
           this.result = res.toFixed(2)
           let results = [0]
-          let interest = [0]
+          let principal = [0]
           let labels = [0]
           for(let i = 1; i <= this.period; i++){
             const result = res*Math.pow((1+(this.interest/100)),i)
             results.push(result.toFixed(2))
             labels.push(`Year ${i}`)
-            let totalInterest = (this.result - this.principal).toFixed(2)
-            interest.push(totalInterest)
-            this.totalInterest = totalInterest
+            console.log("interest",this.result)
+            principal.push(this.result)
           }
 
           this.datacollection = {
           labels: labels,
           datasets: [
             {
-              label: 'Balance',
+              label: 'Future Value',
               backgroundColor: "rgba(255, 224, 181, 0.4)",
               data: results,
               fill: true,
@@ -273,9 +264,9 @@ export default {
               pointHitRadius: 10
             },
             {
-              label: 'Interest',
+              label: 'Contributions',
               backgroundColor: "rgba(63, 132, 92, 0.4)",
-              data: interest,
+              data: principal,
               fill: true,
               lineTension: 0.1,
               borderCapStyle: 'square',
@@ -520,21 +511,6 @@ input {
   text-indent:15px;
   border-radius: 6px;
 }
-.period {
-  display: grid;
-  grid-template-columns: 75% 25%;
-}
-select{
-  width: 100%;
-  height: 37px;
-  border-style: solid;
-  border-width: 1px;
-  border: solid #3A3A3A1A;
-  text-indent: 10px;
-  background-color: #B9B9B91A;
-  margin-right: 5px;
-  border-radius: 0px 6px 6px 0px;
-}
 
 #option1:hover, #option2:hover {
   background-color:#1593EF1A; 
@@ -543,7 +519,8 @@ select{
 
 #yearOption:hover {
   background-color:#1593EF1A; 
-  color:#107ECE
+  color:#107ECE;
+  border-color:#1593EF1A;
 }
 
 .percent {
