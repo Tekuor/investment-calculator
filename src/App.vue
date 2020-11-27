@@ -1,5 +1,122 @@
 <template>
-  <div id="app">
+<div id="wrapper">
+    <div class="content">   
+      <div class="heading"> 
+        <h1 class="text-primary">Investment Calculator</h1>
+        <p class="text-primary">Want to know how much my principal can grow after a duration</p>
+      </div>
+
+      <b-card class="mb-2 card">
+        <b-row>
+          <b-col md="5" sm="12">
+                <div :class="{ active: calcOption == 'principal',inactive: calcOption != 'principal' }" style="cursor:pointer;border-radius:6px;padding:1em;" @click="changeOption('principal')">
+                  <b-row style="padding: 20px 10px 15px 10px">
+                    <b-col :cols="1">
+                      <input style="cursor:pointer" type="radio" id="option" name="option" value="principal" v-model="calcOption">
+                    </b-col>
+                    <b-col :cols="11">
+                      <label for="option" style="cursor:pointer">I want to know how much my principal can grow after a duration.</label>
+                    </b-col>
+                  </b-row>
+                </div>
+
+            <div class="mt-3">
+                <div :class="{ active: calcOption == 'target',inactive: calcOption != 'target' }" id="option2" style="cursor:pointer;border-radius:6px" @click="changeOption('target')">
+                  <b-row style="padding: 20px 10px 15px 10px;">
+                    <b-col :cols="1">
+                      <input style="cursor:pointer" type="radio" id="optionC" name="option" value="target" v-model="calcOption">
+                    </b-col>
+                    <b-col :cols="11">
+                      <label for="optionC" style="cursor:pointer">I want to know how much to invest to get a target amount after a duration.</label>
+                    </b-col>
+                  </b-row>
+                </div>
+            </div>
+
+            <div class="my-3" v-if="calcOption !== 'target'">
+                <label for="principal" style="color:#3A3A3AB3;">Principal (Amount to invest)</label>
+                <b-form-input v-model="principal" id="principal" type="number"></b-form-input>
+            </div>
+
+            <div class="my-3" v-else>
+              <label for="principal" style="color:#3A3A3AB3">Target Amount</label><br/>
+              <b-form-input  type="number" min="1" step="any" id="principalValue" v-model="futureValue"></b-form-input>
+            </div>
+
+            <div class="my-1">
+                <label for="period" style="color:#3A3A3AB3;">Period</label>
+                <b-form-input id="period" type="number" v-model="period"></b-form-input>
+                <b-row class="mt-2">
+                  <b-col sm="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" v-on:click="changePeriod(1)" :class={active:selectedPeriod(1),inactive:!selectedPeriod(1)} href="#">1 year</b-badge>
+                  </b-col>
+
+                  <b-col sm="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" v-on:click="changePeriod(2)" :class={active:selectedPeriod(2),inactive:!selectedPeriod(2)} href="#">2 years</b-badge>
+                  </b-col>
+
+                  <b-col sm="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" v-on:click="changePeriod(3)" :class={active:selectedPeriod(3),inactive:!selectedPeriod(3)} href="#">3 years</b-badge>
+                  </b-col>
+
+                  <b-col sm="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" v-on:click="changePeriod(4)" :class={active:selectedPeriod(4),inactive:!selectedPeriod(4)} href="#">4 years</b-badge>
+                  </b-col>
+
+                  <b-col sm="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" v-on:click="changePeriod(5)" :class={active:selectedPeriod(5),inactive:!selectedPeriod(5)} href="#">5 years</b-badge>
+                  </b-col>
+                </b-row>
+            </div>
+
+            <div class="my-3">
+                <label for="interest" style="color:#3A3A3AB3;">Interest</label>
+                <div class="percent">
+                <b-form-input type="number" id="principalValue" v-model="interest"></b-form-input>
+                </div>
+                <b-row class="mt-2">
+                  <b-col cols="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" href="#" v-on:click="changeInterest(5)" :class={active:selectedInterest(5),inactive:!selectedInterest(5)}>5%</b-badge>
+                  </b-col>
+
+                  <b-col cols="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" href="#" v-on:click="changeInterest(10)" :class={active:selectedInterest(10),inactive:!selectedInterest(10)}>10%</b-badge>
+                  </b-col>
+
+                  <b-col cols="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" href="#" v-on:click="changeInterest(15)" :class={active:selectedInterest(15),inactive:!selectedInterest(15)}>15%</b-badge>
+                  </b-col>
+
+                  <b-col cols="2" class="mr-2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" href="#" v-on:click="changeInterest(20)" :class={active:selectedInterest(20),inactive:!selectedInterest(20)}>20%</b-badge>
+                  </b-col>
+
+                  <b-col cols="2">
+                  <b-badge style="width:70px;height:23px;text-align:center;line-height:16px;" href="#" v-on:click="changeInterest(25)" :class={active:selectedInterest(25),inactive:!selectedInterest(25)}>25%</b-badge>
+                  </b-col>
+                </b-row>
+            </div>
+
+            <div class="my-1">
+              <b-button :disabled="disableCalculate" block class="calc" @click="calculate" style="color:#3A3A3AB3;">Calculate</b-button>
+            </div>
+          </b-col>
+          <b-col md="6" sm="12">
+            <img v-if="!show" src="./assets/invest.png" width="100%" style="padding-top:20%" class="pl-md-6" />
+            <div v-else>
+              <div v-if="calcOption === 'target'" class="small text-center pl-md-6 pl-xs-4" style="background-color:#FFFFFF; width:100%; height:100%">
+                  You will need to invest <span style="text-align: center;color:#3F845C;font-weight: bold">GHC {{result}}</span> to make GHC {{futureValue}} after {{period}} years at a rate of {{interest}}%
+              </div>
+              <line-chart class="pl-md-6 pt-md-6 pl-xs-4 pt-xs-4" :chart-data="datacollection" :options="options"></line-chart>
+            </div>
+          </b-col>
+        </b-row>
+      </b-card>
+    </div>
+    <div class="background">
+    </div>
+</div>
+  <!-- <div id="app">
     <div class="topnav">
       <a>Brand name</a>
     </div>
@@ -104,7 +221,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -293,7 +410,16 @@ export default {
         this.period = ""
         this.interest = ""
         this.futureValue = ""
-      }
+      },
+      selectedPeriod(year){
+        return this.period == year
+      },
+      changeInterest(num){
+        this.interest = num
+      },
+      selectedInterest(interest){
+        return this.interest == interest
+      },
   },
   computed:{
     disableCalculate(){
@@ -309,9 +435,45 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  height: 100%
+<style lang="scss">
+@import "~bootstrap/scss/bootstrap.scss";
+@import '~bootstrap-vue/dist/bootstrap-vue.css';
+
+#wrapper{
+    width: 100%;
+    height: 100%;
+}
+
+.content{
+    position: relative;
+    z-index: 100;
+}
+
+.background{
+    color: #999999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -100;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 50%;
+    background-image: linear-gradient(#3F845C, #3F845C);
+    transform: skewY(-7deg);
+    transform-origin: top left;
+    padding: 0 0 0 0;
+}
+
+.heading {
+  margin-left: 10%;
+}
+
+.card {
+  width:80%;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .active {
@@ -323,204 +485,6 @@ export default {
   background-color:#F4F4F440; 
   color:#3A3A3AB3; 
   border: 1px solid #3A3A3A1A;
-}
-
-.inactiveYear {
-  border: 1px solid #70707080; 
-  color:#3A3A3AB3;
-}
-
-#main1 {
-  position: relative;
-  height: 100%;
-  overflow: hidden;
-}
-
-.header__bg {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  width: 100%;
-  height: 50%;
-  background-image: linear-gradient(#3F845C, #3F845C);
-  transform: skewY(-7deg);
-  transform-origin: top left;
-  padding: 0 0 0 0;
-  z-index: -100;
-}
-
-.content{;
-    position: relative;
-    z-index: 100;
-}
-
-/* Add a black background color to the top navigation */
-.topnav {
-  background-color: white;
-  overflow: hidden;
-}
-
-/* Style the links inside the navigation bar */
-.topnav a {
-  float: left;
-  color: black;
-  text-align: center;
-  padding: 14px 16px;
-  padding-left: 8%;
-  font-weight: bold;
-  font-size: 13px;
-}
-
-div h1, p {
-  position: relative;
-  color: #FFE0B5;
-  padding-left: 15%;
-}
-
-div p {
-  font-size: 13px;
-}
-
-#check {
-  position: relative;
-  height: 70%;
-  width: 100%;
-  background-color: white;
-  /* margin-left: 40%; */
-  margin-top: 3%;
-  overflow: auto;
-}
-
-#option1 {
-  position: relative;
-  height: 65px;
-  width: 70%;
-  margin: auto;
-  margin-top: 5%;
-  font-size: 15px;
-}
-
-#option2 {
-  position: relative;
-  height: 65px;
-  width: 70%;
-  /* background-color: #3A3A3A1A; */
-  margin: auto;
-  margin-top: 5%;
-  font-size: 15px;
-}
-
-#principal {
-  position: relative;
-  width: 70%;
-  margin: auto;
-  margin-top: 5%;
-  font-size: 15px;
-}
-
-#principalValue {
-  width: 100%;
-  height: 35px;
-  background-color: #B9B9B91A;
-  border: 0;
-}
-
-#periodValue {
-  width: 100%;
-  height: 35px;
-  background-color: #B9B9B91A;
-  border: 0;
-  border-radius: 6px 0px 0px 6px;
-}
-
-#calcBtn {
-  position: relative;
-  width: 70%;
-  margin: auto;
-  margin-top: 5%;
-  font-size: 15px;
-}
-
-button:active,
-button:focus {
-  outline-color: #fcd39a 
-}
-
-button:hover {
-  cursor:pointer
-}
-
-button:disabled {
-  opacity: 0.6;
-  color: grey;
-  pointer-events: none;
-}
-
-input:focus {
-  outline-color: #b9b9b9 
-}
-
-button {
-  width: 100%;
-  height: 40px;
-  background-color: #FFE0B5;
-  border: 0;
-  font-weight: 
-}
-
-#years {
-  position: relative;
-  /* height: 65px; */
-  width: 70%;
-  margin: auto;
-  margin-top: 2%;
-  font-size: 15px;
-}
-
-#yearOption {
-  font-size:15px; 
-  height:30px;
-  width: 64px;
-  text-align: center;
-  margin-right: 10px;
-  border-radius: 6px;
-  padding-top: 3px;
-}
-
-/* Enter and leave animations can use different */
-/* durations and timing functions.              */
-.slide-fade-enter-active {
-  transition: all .10s ease;
-}
-.slide-fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateX(10px);
-  opacity: 0;
-}
-.grid-container {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  padding: 10px;
-}
-input {
-  text-indent:15px;
-  border-radius: 6px;
-}
-
-#option1:hover, #option2:hover {
-  background-color:#1593EF1A; 
-  color:#107ECE
-}
-
-#yearOption:hover {
-  background-color:#1593EF1A; 
-  color:#107ECE;
-  border-color:#1593EF1A;
 }
 
 .percent {
@@ -540,5 +504,56 @@ input {
 .percent:hover::after,
 .percent:focus-within::after {
   right: 1.5em;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.calc {
+  background-color: $yellow;
+  border: 0;
+}
+
+.calc:hover, .calc:focus .calc:active {
+  background-color: darken($yellow, 5%);
+  box-shadow: none;
+}
+
+$hoverColor:#1593EF1A;
+
+a.badge-secondary:hover, a.badge-secondary:focus, a.badge-secondary.focus {
+  color: #107ECE;
+  background-color: darken($hoverColor, 15%);
+  box-shadow: none;
+}
+
+.center {
+  margin-top: 14%;
+  margin-left: 10%;
+}
+
+.btn-secondary.disabled, .btn-secondary:disabled, .btn-secondary.active, .btn-secondary:active {
+  background-color: lighten($yellow, 5%);
+}
+
+.btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle {
+  background-color: darken($yellow, 5%);
+  box-shadow: none;
+  border-style: none
+}
+
+.btn-secondary:focus, .btn-secondary.focus {
+  background-color: darken($yellow, 5%);
+  box-shadow: none;
+  border-style: none
 }
 </style>
